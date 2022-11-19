@@ -19,7 +19,7 @@ from joblib.externals.loky.backend.context import get_context
 
 # model location
 MODEL_PATH = Path("models")
-MODEL_NAME = "electronic_components-9483-6128.pth"   # train_acc, test_acc
+MODEL_NAME = "electronic_components-9977-7167.pth"   # train_acc, test_acc
 MODEL_PATH_NAME = MODEL_PATH / MODEL_NAME
 
 BATCH_SIZE = 32
@@ -29,24 +29,24 @@ class_names = ['IC_chip', 'TO-3_transistor', 'TO-92_transistor', 'ceramic_capaci
 
 # load a sample unknown image
 # filepathname = "./unknown/resistor1.jpg"
-# filepathname = "./unknown/resistors2.jpg"
-# filepathname = "./unknown/resistor3.jpg"
-# filepathname = "./unknown/resistor4.jpg"
+filepathname = "./unknown/resistors2.jpg"
+filepathname = "./unknown/resistor3.jpg"
 filepathname = "./unknown/transistor1.jpg"
 filepathname = "./unknown/transistor2.jpg"
-filepathname = "./unknown/transistor3.png"
 filepathname = "./unknown/transistor4.jpg"
 filepathname = "./unknown/power-trans1.jpg"
 filepathname = "./unknown/ceramic1.jpg"
-filepathname = "./unknown/ceramic2.jpg"  # metal film resistor
-filepathname = "./unknown/ceramic3.jpg"
+filepathname = "./unknown/ceramic2.jpg"
+# filepathname = "./unknown/ceramic3.jpg" # metal film resistor
 # filepathname = "./unknown/electrolytics1.jpg"
 # filepathname = "./unknown/electro2.jpg"
-# filepathname = "./unknown/chip1.jpg"
+# filepathname = "./unknown/electro3.jpg"
+# filepathname = "./unknown/electro4.jpg"
+# # filepathname = "./unknown/chip1.jpg"
+# filepathname = "./unknown/chip3.jpg"
 # filepathname = "./unknown/relay1.jpg"
 # filepathname = "./unknown/relay2.jpg"
 # filepathname = "./unknown/relay3.jpg"
-# filepathname = "./unknown/relay4.jpg"
 
 
 # setup cuda if available
@@ -179,6 +179,8 @@ model = TinyVGG(input_shape=3,  # number of color channels RGB=3
 # load model from disk
 model.load_state_dict(torch.load(f=MODEL_PATH_NAME))
 
+
+start_time = timer()
 unknown_img = cv2.imread(filepathname)
 # openCV uses BGR so we need to convert to RGB
 unknown_img_rgb = cv2.cvtColor(unknown_img, cv2.COLOR_BGR2RGB)
@@ -196,19 +198,21 @@ unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(64,64))
 unknown_img_t = img_transform(unknown_img_rgb)  # convert to tensor
 unknown_img_t = unknown_img_t.unsqueeze(dim=0)  # add batch size
 
-print(f"transformed image shape is: {unknown_img_t.shape}")
+# print(f"transformed image shape is: {unknown_img_t.shape}")
 
 
 model.eval()
 with torch.inference_mode():
     predicted_class_logits = model(unknown_img_t)
-    print(predicted_class_logits)
     print(f"filepathname: {filepathname}")
     print(f"\nlogits: {predicted_class_logits}")
     print(f"predicted object is a: {class_names[torch.argmax(predicted_class_logits)]}")
     cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (50,50),  cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0,0,255), 3 )
     cv2.imshow(class_names[torch.argmax(predicted_class_logits)], unknown_img)
+    end_time = timer()
+    print(f"total inference time is: {end_time - start_time} seconds")
 
-    cv2.waitKey()
+cv2.waitKey()
+
 
 

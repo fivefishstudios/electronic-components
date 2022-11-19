@@ -17,9 +17,9 @@ import matplotlib.pyplot as plt
 import cv2
 
 BATCH_SIZE = 10
-EPOCHS = 200
+EPOCHS = 100
 NODES = 64
-LEARNING_RATE = 0.0016
+LEARNING_RATE = 0.00040  # lower converges better/faster
 
 print(f"Our PyTorch version is: {torch.__version__}")
 
