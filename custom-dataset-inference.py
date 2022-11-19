@@ -19,7 +19,7 @@ from joblib.externals.loky.backend.context import get_context
 
 # model location
 MODEL_PATH = Path("models")
-MODEL_NAME = "electronic_components-9977-7167.pth"   # train_acc, test_acc
+MODEL_NAME = "electronic_components-9864-6963.pth"   # train_acc, test_acc
 MODEL_PATH_NAME = MODEL_PATH / MODEL_NAME
 
 BATCH_SIZE = 32
@@ -37,16 +37,16 @@ filepathname = "./unknown/transistor4.jpg"
 filepathname = "./unknown/power-trans1.jpg"
 filepathname = "./unknown/ceramic1.jpg"
 filepathname = "./unknown/ceramic2.jpg"
-# filepathname = "./unknown/ceramic3.jpg" # metal film resistor
+filepathname = "./unknown/ceramic3.jpg" # metal film resistor
 # filepathname = "./unknown/electrolytics1.jpg"
 # filepathname = "./unknown/electro2.jpg"
-# filepathname = "./unknown/electro3.jpg"
+# filepathname = "./unknown/electro3.jpg" # metal film resistor
 # filepathname = "./unknown/electro4.jpg"
-# # filepathname = "./unknown/chip1.jpg"
-# filepathname = "./unknown/chip3.jpg"
-# filepathname = "./unknown/relay1.jpg"
-# filepathname = "./unknown/relay2.jpg"
-# filepathname = "./unknown/relay3.jpg"
+# filepathname = "./unknown/chip1.jpg"
+filepathname = "./unknown/chip3.jpg"
+filepathname = "./unknown/relay1.jpg"
+filepathname = "./unknown/relay2.jpg"
+filepathname = "./unknown/relay3.jpg"
 
 
 # setup cuda if available
