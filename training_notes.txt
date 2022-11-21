@@ -22,7 +22,11 @@ LEARNING_RATE = 0.00045
 Total training time: 2631.819126483 seconds
 FILE: electronic_components-9571-6704.pth
 -----
-
+Image size: 128x128
+BATCH_SIZE = 5
+EPOCHS = 100
+NODES = 64
+LEARNING_RATE = 0.00045  # lower converges better/faster
 
 
 

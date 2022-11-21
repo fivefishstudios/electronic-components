@@ -19,34 +19,34 @@ from joblib.externals.loky.backend.context import get_context
 
 # model location
 MODEL_PATH = Path("models")
-MODEL_NAME = "electronic_components-9864-6963.pth"   # train_acc, test_acc
+MODEL_NAME = "electronic_components-128-9750-6944.pth"   # train_acc, test_acc
 MODEL_PATH_NAME = MODEL_PATH / MODEL_NAME
 
-BATCH_SIZE = 32
+BATCH_SIZE = 5
 NODES = 64
 
 class_names = ['IC_chip', 'TO-3_transistor', 'TO-92_transistor', 'ceramic_capacitor', 'electrolytic_capacitor',  'metal_film_resistor', 'relay']
 
 # load a sample unknown image
-# filepathname = "./unknown/resistor1.jpg"
+filepathname = "./unknown/resistor1.jpg"
 filepathname = "./unknown/resistors2.jpg"
 filepathname = "./unknown/resistor3.jpg"
-filepathname = "./unknown/transistor1.jpg"
-filepathname = "./unknown/transistor2.jpg"
-filepathname = "./unknown/transistor4.jpg"
-filepathname = "./unknown/power-trans1.jpg"
-filepathname = "./unknown/ceramic1.jpg"
-filepathname = "./unknown/ceramic2.jpg"
-filepathname = "./unknown/ceramic3.jpg" # metal film resistor
-# filepathname = "./unknown/electrolytics1.jpg"
+# filepathname = "./unknown/transistor1.jpg"
+# filepathname = "./unknown/transistor2.jpg"
+# filepathname = "./unknown/transistor4.jpg"
+# filepathname = "./unknown/power-trans1.jpg"
+# filepathname = "./unknown/ceramic1.jpg"
+# filepathname = "./unknown/ceramic2.jpg"
+# filepathname = "./unknown/ceramic3.jpg"
+# filepathname = "./unknown/electrolytics1.jpg"   # relay
 # filepathname = "./unknown/electro2.jpg"
 # filepathname = "./unknown/electro3.jpg" # metal film resistor
 # filepathname = "./unknown/electro4.jpg"
 # filepathname = "./unknown/chip1.jpg"
-filepathname = "./unknown/chip3.jpg"
-filepathname = "./unknown/relay1.jpg"
-filepathname = "./unknown/relay2.jpg"
-filepathname = "./unknown/relay3.jpg"
+# filepathname = "./unknown/chip3.jpg"
+# filepathname = "./unknown/relay1.jpg"
+# filepathname = "./unknown/relay2.jpg"
+# filepathname = "./unknown/relay3.jpg"
 
 
 # setup cuda if available
@@ -59,7 +59,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 data_transform = transforms.Compose([  # Compose is used to serialize our tranforms functions
     # transform operations are a list
     # 1. resize image to be smaller
-    transforms.Resize(size=(64, 64)),
+    transforms.Resize(size=(128, 128)),
     # 2. do some data augmentation
     transforms.RandomHorizontalFlip(p=0.25),  # flip horizontal 25% of the time
     transforms.RandomRotation(degrees=30),  # test_acc = 0.6710
@@ -128,7 +128,7 @@ class TinyVGG(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(in_features=hidden_units * 8 * 8,
+            nn.Linear(in_features=hidden_units * 16 * 16,
                       out_features=output_shape)
         )
 
@@ -194,12 +194,12 @@ img_transform = transforms.Compose([
 ])
 
 # resize image to 64x64, same size expected by our model
-unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(64,64))
+unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(128,128))
 unknown_img_t = img_transform(unknown_img_rgb)  # convert to tensor
 unknown_img_t = unknown_img_t.unsqueeze(dim=0)  # add batch size
 
 # print(f"transformed image shape is: {unknown_img_t.shape}")
-
+unknown_img_t = unknown_img_t.to(device)
 
 model.eval()
 with torch.inference_mode():

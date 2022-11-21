@@ -16,10 +16,10 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import cv2
 
-BATCH_SIZE = 10
+BATCH_SIZE = 5
 EPOCHS = 100
 NODES = 64
-LEARNING_RATE = 0.00040  # lower converges better/faster
+LEARNING_RATE = 0.00045  # lower converges better/faster
 
 print(f"Our PyTorch version is: {torch.__version__}")
 
@@ -41,7 +41,7 @@ print(f"{train_dir} and {test_dir} are our TRAIN and TEST directories")
 data_transform = transforms.Compose([  # Compose is used to serialize our tranforms functions
     # transform operations are a list
     # 1. resize image to be smaller
-    transforms.Resize(size=(64, 64)),
+    transforms.Resize(size=(128, 128)),
     # 2. do some data augmentation
     transforms.RandomHorizontalFlip(p=0.25),    # flip horizontal 25% of the time
     transforms.RandomRotation(degrees=30),
@@ -178,7 +178,7 @@ class TinyVGG(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(in_features=hidden_units * 8 * 8,
+            nn.Linear(in_features=hidden_units * 16 * 16,
                       out_features=output_shape)
         )
 
